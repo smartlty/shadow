@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.denachina.shadow.dao.UserDataDao">
+    <resultMap type="com.denachina.shadow.pojo.UserData" id="userData">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="sexType" column="sex_type"/>
+        <result property="birthday" column="birthday"/>
+        <result property="jobName" column="job_name"/>
+        <result property="interest" column="interest"/>
+        <result property="intro" column="intro"/>
+        <result property="isFreeze" column="is_freeze"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="level" column="level"/>
+        <result property="email" column="email"/>
+        <result property="phoneNo" column="phone_no"/>
+        <result property="createdOn" column="created_on"/>
+        <result property="updatedOn" column="updated_on"/>
+    </resultMap>
+    <select id="getAllUserData" resultMap="userData">
+	  SELECT * FROM user_data
+    </select>
+    <select id="getUserDataByJobName" resultMap="userData">
+	  SELECT * FROM user_data WHERE job_name = #{jobName}
+    </select>
+    <update id="updateUserDataJobname" >
+      UPDATE user_data SET job_name = #{jobName} WHERE user_id = #{userId}
+    </update>
+    <insert id="insertUserData"  parameterType="com.denachina.shadow.pojo.UserData" useGeneratedKeys="true" keyProperty="user_id">
+	  INSERT INTO user_data (user_name,sex_type,birthday,job_name,interest,intro,is_freeze,user_status,level,email,phone_no,created_on,updated_on)
+	  values (#{userName},#{sexType},#{birthday},#{jobName},#{interest},#{intro},#{isFreeze},#{userStatus},#{level},#{email},#{phoneNo},#{createdOn},#{updatedOn})
+    </insert>
+    <delete id="deleteUserData" >
+	  DELETE * FROM user_data where user_id = #{userId}
+    </delete>
+</mapper>

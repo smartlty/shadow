@@ -1,6 +1,6 @@
 package com.denachina.shadow.controller;
 
-import com.denachina.shadow.dao.UserData;
+import com.denachina.shadow.pojo.UserData;
 
 import com.denachina.shadow.service.UserDataService;
 import org.slf4j.Logger;
@@ -70,11 +70,11 @@ public class ShadowController {
         UserData userData = new UserData(userName,sexType,birthday,jobName,intro,level,email,phoneNo);
         logger.info("insert into table , data {}", userData);
 
-        UserData userData1= userDataService.insertUserData(userData);
+        int ret= userDataService.insertUserData(userData);
 
 //        produceMessage.send("执行新增操作,UTC时间 "+Instant.now() + " ; 插入对象 "+ userData1);
 
-        return userData1.getUserId();
+        return ret;
     }
     @RequestMapping(value = "/delete")
     public int deleteUser(HttpServletRequest request, @RequestParam("userId") Integer userId){

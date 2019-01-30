@@ -1,9 +1,10 @@
-package com.denachina.shadow.service;
+package com.denachina.shadow.dao;
 
 import com.denachina.shadow.pojo.SysUser;
+import org.springframework.stereotype.Component;
 
-public interface SysUserService {
-
+@Component
+public interface SysUserDao {
     /**
      * 根据用户名和密码查询对应的用户
      *
@@ -12,6 +13,4 @@ public interface SysUserService {
      * @return
      */
     SysUser getSysUserInfo(String username, String password);
-
 }
-

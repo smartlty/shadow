@@ -1,6 +1,6 @@
 package com.denachina.shadow.config.shiro;
 
-import com.denachina.shadow.dao.SysUser;
+import com.denachina.shadow.pojo.SysUser;
 import com.denachina.shadow.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;

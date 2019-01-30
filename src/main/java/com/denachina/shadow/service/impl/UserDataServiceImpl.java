@@ -1,12 +1,11 @@
 package com.denachina.shadow.service.impl;
 
-import com.denachina.shadow.dao.UserData;
-import com.denachina.shadow.dao.UserDataRepository;
+import com.denachina.shadow.dao.UserDataDao;
+import com.denachina.shadow.pojo.UserData;
 import com.denachina.shadow.service.UserDataService;
 import com.denachina.shadow.util.DbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,65 +13,54 @@ import java.util.List;
 public class UserDataServiceImpl implements UserDataService{
 
     @Autowired
-    UserDataRepository userDataRepository;
-
-    @Transactional(value = "postgresqlTransactionManager", readOnly = true)
-    UserData findUserDataByJobName(String jobName) {
-        return userDataRepository.findTopByJobNameOrderByCreatedOnDesc(jobName);
-    }
-
-    @Transactional(value = "postgresqlTransactionManager", readOnly = true)
-    List<UserData> findAllUserData() {
-        return userDataRepository.findAll();
-    }
-
-    @Transactional(value = "postgresqlTransactionManager")
-    int updateJobname(Integer UserId, String jobName) {
-        return userDataRepository.updateJobName(jobName,UserId);
-    }
-
-    @Transactional(value = "postgresqlTransactionManager", rollbackFor = Exception.class)
-    UserData insertUserDataOnDuplicateKey(UserData userData) {
-        return userDataRepository.save(userData);
-    }
-
-    @Transactional(value = "postgresqlTransactionManager", rollbackFor = Exception.class)
-    void deleteUserDataByUserId(Integer UserId) {
-        userDataRepository.deleteById(UserId);
-    }
+    UserDataDao userDataDao;
 
     @Override
     public List<UserData> getAllUserData() {
-        return findAllUserData();
+        DbUtil.setPostgresDbR();
+        return userDataDao.getAllUserData();
     }
 
     @Override
     public UserData getUserDataByJobName(String jobName) {
-        return findUserDataByJobName(jobName);
+        DbUtil.setPostgresDbR();
+        return userDataDao.getUserDataByJobName(jobName);
     }
 
     @Override
-    public int updateUserDataJobname(Integer UserId, String jobName) {
+    public int updateUserDataJobname(Integer userId, String jobName) {
         DbUtil.setPostgresDbW();
-        return updateJobname(UserId, jobName);
-    }
-
-    @Override
-    public UserData insertUserData(UserData userData) {
-        DbUtil.setPostgresDbW();
-        return insertUserDataOnDuplicateKey(userData);
-    }
-
-    @Override
-    public int deleteUserData(Integer UserId) {
-        DbUtil.setPostgresDbW();
+        int ret = 0;
         try {
-            deleteUserDataByUserId(UserId);
+            ret = userDataDao.updateUserDataJobname(userId, jobName);
         } catch (Exception e){
             e.printStackTrace();
-            return 0;
         }
-        return 1;
+        return ret;
+    }
+
+    @Override
+    public int insertUserData(UserData userData) {
+        DbUtil.setPostgresDbW();
+        int ret = 0;
+        try {
+            ret = userDataDao.insertUserData(userData);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    @Override
+    public int deleteUserData(Integer userId) {
+        DbUtil.setPostgresDbW();
+        int ret = 0;
+        try {
+            ret = userDataDao.deleteUserData(userId);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return ret;
     }
 
 }

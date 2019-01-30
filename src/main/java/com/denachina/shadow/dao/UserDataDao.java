@@ -1,10 +1,12 @@
-package com.denachina.shadow.service;
+package com.denachina.shadow.dao;
 
 import com.denachina.shadow.pojo.UserData;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public interface UserDataService {
+@Component
+public interface UserDataDao {
     /**
      * 查询所有记录
      *

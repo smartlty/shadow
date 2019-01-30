@@ -1,29 +1,23 @@
 package com.denachina.shadow.config.dbconfig;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(
-        entityManagerFactoryRef = "postgresqlEntityManager",
-        transactionManagerRef = "postgresqlTransactionManager",
-        basePackages = "com.denachina.shadow.dao"
-)
+@MapperScan(basePackages={"com.denachina.shadow.dao"}, sqlSessionTemplateRef = "shadowSqlSessionTemplate")
 @PropertySource(value = "classpath:db.properties")
 public class PostgresConfig {
 
@@ -78,38 +72,23 @@ public class PostgresConfig {
         return dynamicDataSource;
     }
 
-    /**
-     * Entity manager definition.
-     */
-
-    @Bean(name = "postgresqlEntityManager")
-    public LocalContainerEntityManagerFactoryBean postgresqlEntityManagerFactory(EntityManagerFactoryBuilder builder) {
-        return builder
-                .dataSource(dynamicDataSource())
-                .packages("com.denachina.shadow.dao")
-//                .properties(hibernateProperties())
-                .persistenceUnit("database:postgres")
-                .build();
-    }
-
-    @Bean(name = "postgresqlTransactionManager")
-    public PlatformTransactionManager postgresqlTransactionManager(@Qualifier("postgresqlEntityManager") EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
-/*
-    private Map<String, Object> hibernateProperties() {
-
-        Resource resource = new ClassPathResource("hibernate.properties");
+    @Bean
+    public SqlSessionFactory shadowSqlSessionFactory(@Qualifier("dynamicDataSource") DataSource dataSource) {
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
-            Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-            return properties.entrySet().stream()
-                    .collect(Collectors.toMap(
-                            e -> e.getKey().toString(),
-                            e -> e.getValue())
-                    );
-        } catch (IOException e) {
-            return new HashMap<>();
+            bean.setMapperLocations(resolver.getResources("classpath:/shadowMapper/*.xml"));
+            return bean.getObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-    }*/
+    }
+
+    @Bean
+    public SqlSessionTemplate shadowSqlSessionTemplate(@Qualifier("shadowSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
 
 }
