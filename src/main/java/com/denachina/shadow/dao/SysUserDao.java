@@ -13,4 +13,6 @@ public interface SysUserDao {
      * @return
      */
     SysUser getSysUserInfo(String username, String password);
+
+    boolean updateById(Integer userId, String username);
 }

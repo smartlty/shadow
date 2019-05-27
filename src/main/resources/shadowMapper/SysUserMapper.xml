@@ -16,4 +16,7 @@
     <select id="getSysUserInfo" resultMap="sysUser">
 	  SELECT * FROM sys_user WHERE username = #{username} and password = #{password}
     </select>
+    <update id="updateById" >
+        UPDATE sys_user SET username = #{username} WHERE user_id = #{userId}
+    </update>
 </mapper>

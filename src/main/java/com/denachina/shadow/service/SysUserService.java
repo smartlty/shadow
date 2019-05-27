@@ -13,5 +13,7 @@ public interface SysUserService {
      */
     SysUser getSysUserInfo(String username, String password);
 
+    boolean updateById(Integer userId, String username) throws Exception;
+
 }
 

@@ -27,10 +27,10 @@ public class BaseConfig {
         dataSource.setPassword(password);
         dataSource.setDriverClassName(diverClassName);
         dataSource.setMinimumIdle(0);
-//        dataSource.setMaximumPoolSize(10);
+        /* dataSource.setMaximumPoolSize(10); */
         dataSource.setConnectionTestQuery("SELECT 1");
         dataSource.setLeakDetectionThreshold(2000);
-        dataSource.setAutoCommit(false);
+//        dataSource.setAutoCommit(false);
         // 调优参数
         dataSource.addDataSourceProperty("cachePrepStmts", "true");
         dataSource.addDataSourceProperty("prepStmtCacheSize", "250");

@@ -17,19 +17,19 @@ public class UserDataServiceImpl implements UserDataService{
 
     @Override
     public List<UserData> getAllUserData() {
-        DbUtil.setPostgresDbR();
+        DbUtil.setDbR();
         return userDataDao.getAllUserData();
     }
 
     @Override
     public UserData getUserDataByJobName(String jobName) {
-        DbUtil.setPostgresDbR();
+        DbUtil.setDbR();
         return userDataDao.getUserDataByJobName(jobName);
     }
 
     @Override
     public int updateUserDataJobname(Integer userId, String jobName) {
-        DbUtil.setPostgresDbW();
+        DbUtil.setDbW();
         int ret = 0;
         try {
             ret = userDataDao.updateUserDataJobname(userId, jobName);
@@ -41,7 +41,7 @@ public class UserDataServiceImpl implements UserDataService{
 
     @Override
     public int insertUserData(UserData userData) {
-        DbUtil.setPostgresDbW();
+        DbUtil.setDbW();
         int ret = 0;
         try {
             ret = userDataDao.insertUserData(userData);
@@ -53,7 +53,7 @@ public class UserDataServiceImpl implements UserDataService{
 
     @Override
     public int deleteUserData(Integer userId) {
-        DbUtil.setPostgresDbW();
+        DbUtil.setDbW();
         int ret = 0;
         try {
             ret = userDataDao.deleteUserData(userId);

@@ -3,6 +3,7 @@ package com.denachina.shadow.pojo;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Data
 public class SysUser {
@@ -21,9 +22,9 @@ public class SysUser {
 
     private String extra;
 
-    private ZonedDateTime createTime;
+    private Date createTime;
 
-    private ZonedDateTime updateTime;
+    private Date updateTime;
 
     public SysUser(){
     }

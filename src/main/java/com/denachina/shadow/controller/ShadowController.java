@@ -2,10 +2,12 @@ package com.denachina.shadow.controller;
 
 import com.denachina.shadow.pojo.UserData;
 
+import com.denachina.shadow.service.SysUserService;
 import com.denachina.shadow.service.UserDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,9 @@ public class ShadowController {
 
     @Autowired
     UserDataService userDataService;
+
+    @Autowired
+    SysUserService sysUserService;
 
     @RequestMapping(value = "/list")
     public List<UserData> findAll(HttpServletRequest request){
@@ -61,13 +66,12 @@ public class ShadowController {
     public int insertUser(HttpServletRequest request){
         String userName = "劳拉";
         String sexType = "female";
-        LocalDate birthday = LocalDate.parse("2007-12-24");
         String jobName = "tomb raider";
         String intro = "Life lies in adventure!";
         Integer level = 100;
         String email = "laola@gmail.com";
         String phoneNo = "+90666666";
-        UserData userData = new UserData(userName,sexType,birthday,jobName,intro,level,email,phoneNo);
+        UserData userData = new UserData(userName,sexType,null,jobName,intro,level,email,phoneNo);
         logger.info("insert into table , data {}", userData);
 
         int ret= userDataService.insertUserData(userData);
@@ -83,5 +87,16 @@ public class ShadowController {
 //        produceMessage.send("执行查询更新,UTC时间 "+Instant.now() + "; 更新的 userId "+ userId);
 
         return userDataService.deleteUserData(userId);
+    }
+
+    @PostMapping(value = "/update")
+    @Transactional
+    public boolean update(HttpServletRequest request, @RequestParam Integer userId, @RequestParam String username) throws Exception {
+        logger.info("update record by userId {}", userId);
+
+//        produceMessage.send("执行查询更新,UTC时间 "+Instant.now() + "; 更新的 userId "+ userId);
+        boolean ret = sysUserService.updateById(userId, username);
+
+        return ret;
     }
 }

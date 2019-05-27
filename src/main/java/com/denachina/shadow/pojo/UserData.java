@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Data
 public class UserData {
@@ -14,7 +15,7 @@ public class UserData {
 
     private String sexType;
 
-    private LocalDate birthday;
+    private Date birthday;
 
     private String jobName;
 
@@ -32,13 +33,16 @@ public class UserData {
 
     private String phoneNo;
 
-    private ZonedDateTime createdOn;
+    private Date createdOn;
 
-    private ZonedDateTime updatedOn;
+    private Date updatedOn;
 
-    public UserData(){}
+    public UserData(){
+        this.createdOn = new Date();
+        this.updatedOn = new Date();
+    }
 
-    public UserData(String userName,String sexType, LocalDate birthday,String jobName,String intro,Integer level,String email,String phoneNo){
+    public UserData(String userName,String sexType, Date birthday,String jobName,String intro,Integer level,String email,String phoneNo){
         this.userName = userName;
         this.sexType = sexType;
         this.birthday = birthday;
@@ -50,8 +54,8 @@ public class UserData {
         this.level = level;
         this.email = email;
         this.phoneNo = phoneNo;
-        this.createdOn = ZonedDateTime.now();
-        this.updatedOn = ZonedDateTime.now();
+        this.createdOn = new Date();
+        this.updatedOn = new Date();
     }
 
 }

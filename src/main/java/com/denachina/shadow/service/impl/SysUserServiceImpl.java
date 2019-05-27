@@ -6,6 +6,7 @@ import com.denachina.shadow.service.SysUserService;
 import com.denachina.shadow.util.DbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysUserServiceImpl implements SysUserService {
@@ -15,8 +16,18 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser getSysUserInfo(String username, String password) {
-        DbUtil.setPostgresDbR();
+        DbUtil.setDbR();
         return sysUserDao.getSysUserInfo(username, password);
+    }
+
+    @Override
+    public boolean updateById(Integer userId, String username){
+        DbUtil.setDbW();
+        boolean ret = sysUserDao.updateById(userId, username);
+        if (ret){
+            throw new RuntimeException();
+        }
+        return ret;
     }
 
 }

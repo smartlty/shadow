@@ -19,55 +19,57 @@ import java.util.Map;
 @Configuration
 @MapperScan(basePackages={"com.denachina.shadow.dao"}, sqlSessionTemplateRef = "shadowSqlSessionTemplate")
 @PropertySource(value = "classpath:db.properties")
-public class PostgresConfig {
+public class DBConfig {
 
-    @Value("${postgresql.datasource.r.jdbc-url}")
+    @Value("${datasource.r.jdbc-url}")
     private String urlR;
 
-    @Value("${postgresql.datasource.r.username}")
+    @Value("${datasource.r.username}")
     private String userNameR;
 
-    @Value("${postgresql.datasource.r.password}")
+    @Value("${datasource.r.password}")
     private String passwordR;
 
-    @Value("${postgresql.datasource.w.jdbc-url}")
+    @Value("${datasource.w.jdbc-url}")
     private String urlW;
 
-    @Value("${postgresql.datasource.w.username}")
+    @Value("${datasource.w.username}")
     private String userNameW;
 
-    @Value("${postgresql.datasource.w.password}")
+    @Value("${datasource.w.password}")
     private String passwordW;
 
-    @Value("${postgresql.datasource.diverClassName}")
+    @Value("${datasource.diverClassName}")
     private String diverClassName;
 
     /**
-     * PostgreSQL datasource ReadOnly definition.
+     * datasource ReadOnly definition.
      */
-    private DataSource postgresRDataSource() {
+    private DataSource dataSourceR() {
         return BaseConfig.createDataSource(urlR, userNameR, passwordR, diverClassName);
     }
 
     /**
-     * PostgreSQL datasource Write definition.
+     * datasource Write definition.
      */
-    private DataSource postgresWDataSource() {
+    private DataSource dataSourceW() {
         return BaseConfig.createDataSource(urlW, userNameW, passwordW, diverClassName);
     }
 
     @Bean
     public DataSource dynamicDataSource() {
-        DataSource PostgresW = postgresWDataSource();
-        DataSource PostgresR = postgresRDataSource();
+        DataSource dbw = dataSourceW();
+        DataSource dbr = dataSourceR();
 
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(PostgresDBContextHolder.POSTGRES_R, PostgresR);
-        targetDataSources.put(PostgresDBContextHolder.POSTGRES_W, PostgresW);
+        targetDataSources.put(DBContextHolder.DB_R, dbr);
+        targetDataSources.put(DBContextHolder.DB_W, dbw);
 
-        PostgresDynamicDataSource dynamicDataSource = new PostgresDynamicDataSource();
-        dynamicDataSource.setTargetDataSources(targetDataSources);// 该方法是AbstractRoutingDataSource的方法
-        dynamicDataSource.setDefaultTargetDataSource(PostgresR);//配置默认的数据源
+        DynamicDataSource dynamicDataSource = new DynamicDataSource();
+        // 该方法是AbstractRoutingDataSource的方法
+        dynamicDataSource.setTargetDataSources(targetDataSources);
+        //配置默认的数据源
+        dynamicDataSource.setDefaultTargetDataSource(dbr);
 
         return dynamicDataSource;
     }
